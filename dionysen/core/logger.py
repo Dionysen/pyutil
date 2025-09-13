@@ -30,9 +30,10 @@ class CustomFormatter(logging.Formatter):
         message = super().format(record)
         if self.use_color:
             level_color = self.COLORS.get(record.levelname, '')
-            message = message.replace(
-                f'[{record.levelname}]', 
-                f'[{level_color}{record.levelname}{Style.RESET_ALL}]'
+            message = (
+                f'[{record.asctime}] [{record.name}] '
+                f'[{level_color}{record.levelname}{Style.RESET_ALL}] - '
+                f'{level_color}{record.message}{Style.RESET_ALL}'
             )
         return message
 
@@ -45,7 +46,7 @@ def setup_logger(name=None, use_color=True):
     """
     config = Config()
     
-    logger = logging.getLogger(name or "batch_utils")
+    logger = logging.getLogger(name or "Dionysen")
     
     if not logger.handlers:
         logger.setLevel(getattr(logging, config.get("log_level", "INFO")))
