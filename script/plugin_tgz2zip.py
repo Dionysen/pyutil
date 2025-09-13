@@ -20,7 +20,48 @@ plugins = [
         "description": "按照您的想法自动渲染效果图",
         "url": "https://gaid-data.obs.cn-north-4.myhuaweicloud.com/IDE/plugins/dev/AI灵感渲染器-1.2.0.5.tgz"
     },
-    # 其他插件数据...
+    {
+        "icon": "https://gaid-data.obs.cn-north-4.myhuaweicloud.com/IDE/client/icons/GD/GD.png",
+        "name": "总图排布",
+        "sort": 2,
+        "description": "按照分区业态一键生成总图方案",
+        "url": "https://gaid-data.obs.cn-north-4.myhuaweicloud.com/IDE/plugins/dev/总图排布-1.1.0.2.tgz"
+    },
+    {
+        "icon": "https://gaid-data.obs.cn-north-4.myhuaweicloud.com/IDE/client/icons/optimization/optimization.png",
+        "name": "总图优化",
+        "sort": 3,
+        "description": "通过优化楼栋的层数和位置，使方案更加贴合指标与规范",
+        "url": "https://gaid-data.obs.cn-north-4.myhuaweicloud.com/IDE/plugins/dev/总图优化-1.1.0.2.tgz"
+    },
+    {
+        "icon": "https://gaid-data.obs.cn-north-4.myhuaweicloud.com/IDE/client/icons/optimization/optimization.png",
+        "name": "AI助手",
+        "sort": 4,
+        "description": "AI助手",
+        "url": "https://gaid-data.obs.cn-north-4.myhuaweicloud.com/IDE/plugins/dev/AI助手-0.0.1.83.tgz"
+    },
+    {
+        "icon": "https://gaid-data.obs.cn-north-4.myhuaweicloud.com/IDE/plugins/dev/场地定位.png",
+        "name": "场地定位",
+        "sort": 5,
+        "description": "快速定位用地, 条件设置",
+        "url": "https://gaid-data.obs.cn-north-4.myhuaweicloud.com/IDE/plugins/dev/场地定位-1.0.0.0.tgz"
+    },
+    {
+        "icon": "https://gaid-data.obs.cn-north-4.myhuaweicloud.com/IDE/plugins/dev/AI成本估算.png",
+        "name": "AI成本估算",
+        "sort": 6,
+        "description": "上传经济技术指标表快速估算成本",
+        "url": "https://gaid-data.obs.cn-north-4.myhuaweicloud.com/IDE/plugins/dev/AI成本估算-0.0.0.15.tgz"
+    },
+    {
+        "icon": "https://gaid-data.obs.cn-north-4.myhuaweicloud.com/IDE/client/icons/optimization/optimization.png",
+        "name": "AI智绘立面",
+        "sort": 1.1,
+        "description": "",
+        "url": "https://gaid-data.obs.cn-north-4.myhuaweicloud.com/IDE/plugins/dev/AI智绘立面-1.1.0.3.tgz"
+    }
 ]
 
 def process_plugins():
@@ -28,8 +69,8 @@ def process_plugins():
     logger.info("开始处理插件")
     
     # 创建输出目录
-    dist_dir = Path("dist")
-    dist_zip_dir = Path("distZip")
+    dist_dir = Path("tmp") / "dist"
+    dist_zip_dir = Path("tmp") / "distZip" 
     dist_dir.mkdir(exist_ok=True)
     dist_zip_dir.mkdir(exist_ok=True)
     
