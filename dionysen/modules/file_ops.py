@@ -3,6 +3,12 @@ import shutil
 from pathlib import Path
 from ..core.base import BaseProcessor
 
+# import PIL
+try:
+    from PIL import Image
+except ImportError:
+    Image = None
+
 class FileOperations(BaseProcessor):
     """文件操作处理器"""
     
@@ -80,3 +86,54 @@ class FileOperations(BaseProcessor):
                     self.logger.error(f"重命名失败 {file_path}: {e}")
         
         return renamed_files
+
+    def convert_image_format(self, source_pattern, target_format, delete_original=False):
+        """
+        转换匹配模式的图片文件格式.
+        例如, 将 .jfif 转换为 .jpg
+        
+        :param source_pattern: 源文件匹配模式 (例如: '*.jfif')
+        :param target_format: 目标格式 (例如: 'jpg')
+        :param delete_original: 转换后是否删除源文件
+        """
+        if Image is None:
+            self.logger.error("Pillow 库未安装或导入失败。请运行 'pip install Pillow' 来安装。")
+            return []
+
+        converted_files = []
+        files_to_convert = list(Path().glob(source_pattern))
+
+        if not files_to_convert:
+            self.logger.info(f"没有找到匹配 '{source_pattern}' 的文件")
+            return []
+
+        for file_path in files_to_convert:
+            if not file_path.is_file():
+                continue
+
+            try:
+                new_path = file_path.with_suffix(f".{target_format.lower()}")
+
+                if new_path.exists():
+                    self.logger.warning(f"目标文件已存在，跳过: {new_path}")
+                    continue
+
+                with Image.open(file_path) as img:
+                    # 对于JPEG，如果源图是RGBA（带透明通道），需要转为RGB
+                    if img.mode in ("RGBA", "P") and target_format.lower() in ('jpeg', 'jpg'):
+                        img = img.convert("RGB")
+                    
+                    # Pillow 需要 'JPEG' 作为格式名称
+                    save_format = 'JPEG' if target_format.lower() in ('jpg', 'jpeg') else target_format.upper()
+                    img.save(new_path, format=save_format)
+
+                converted_files.append((str(file_path), str(new_path)))
+                self.logger.info(f"已转换: {file_path} -> {new_path}")
+
+                if delete_original:
+                    file_path.unlink()
+                    self.logger.info(f"已删除源文件: {file_path}")
+
+            except Exception as e:
+                self.logger.error(f"转换文件失败 {file_path}: {e}")
+        return converted_files
