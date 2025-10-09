@@ -61,11 +61,12 @@ def process_plugins():
                     file_path.unlink()
                     logger.info(f"已删除: {file}")
             
-            # 创建ZIP文件
+            # 创建ZIP文件 - 打包package目录中的内容，不包含package父目录
             zip_filename = f"{plugin_name}.zip"
             zip_path = archive_ops.create_archive(
                 package_dir, 
-                dist_zip_dir / zip_filename
+                dist_zip_dir / zip_filename,
+                include_root=False
             )
             
             logger.info(f"成功处理插件: {plugin_name}")

@@ -44,7 +44,7 @@ class ArchiveOperations(BaseProcessor):
             self.logger.error(f"解压失败 {archive_path}: {e}")
             raise
     
-    def create_archive(self, source_path, archive_path, format='zip'):
+    def create_archive(self, source_path, archive_path, format='zip', include_root=True):
         """创建压缩文件"""
         source_path = Path(source_path)
         archive_path = Path(archive_path)
@@ -57,7 +57,12 @@ class ArchiveOperations(BaseProcessor):
                     else:
                         for file in source_path.rglob('*'):
                             if file.is_file():
-                                arcname = file.relative_to(source_path.parent)
+                                if include_root:
+                                    # 包含根目录名称
+                                    arcname = file.relative_to(source_path.parent)
+                                else:
+                                    # 不包含根目录名称，直接从内容开始
+                                    arcname = file.relative_to(source_path)
                                 zipf.write(file, arcname)
             
             elif format == 'tar':
